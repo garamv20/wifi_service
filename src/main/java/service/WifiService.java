@@ -5,6 +5,7 @@ import dto.Wifi;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WifiService {
     public void dbSelect() {
@@ -131,6 +132,7 @@ public class WifiService {
 
             while (rs.next()) {
                 Wifi wifi = new Wifi();
+                wifi.setId(rs.getInt("id"));
                 wifi.setDistance(rs.getDouble("distance"));
                 wifi.setxSwifiMgrNo(rs.getString("mgr_no"));
                 wifi.setxSwifiWrdofc(rs.getString("wrdofc"));
@@ -159,7 +161,50 @@ public class WifiService {
         }
         return wifiList;
     }
-//    public static void main(String[] args) {
-//        new WifiService().dbSelect();
-//    }
+
+    public static Wifi selectWifiOne(int wifiId, String distance) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        Wifi wifi = null;
+
+        try {
+            connection = DbConnection.getConnection();
+
+            String sql = " select * from public_wifi where id = ? ";
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, wifiId);
+
+            rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                wifi = new Wifi();
+                wifi.setId(rs.getInt("id"));
+                wifi.setDistance(Double.parseDouble(distance));
+                wifi.setxSwifiMgrNo(rs.getString("mgr_no"));
+                wifi.setxSwifiWrdofc(rs.getString("wrdofc"));
+                wifi.setxSwifiMainNm(rs.getString("wifi_nm"));
+                wifi.setxSwifiAdres1(rs.getString("adres1"));
+                wifi.setxSwifiAdres2(rs.getString("adres2"));
+                wifi.setxSwifiInstlFloor(rs.getString("instl_floor"));
+                wifi.setxSwifiInstlTy(rs.getString("instl_ty"));
+                wifi.setxSwifiInstlMby(rs.getString("instl_mby"));
+                wifi.setxSwifiSvcSe(rs.getString("svc_se"));
+                wifi.setxSwifiCmcwr(rs.getString("cmcwr"));
+                wifi.setxSwifiCnstcYear(rs.getString("cnstc_year"));
+                wifi.setxSwifiInoutDoor(rs.getString("inout_door"));
+                wifi.setxSwifiRemars3(rs.getString("remars3"));
+                wifi.setLat(rs.getDouble("lat"));
+                wifi.setLnt(rs.getDouble("lnt"));
+                wifi.setWorkDttm(rs.getString("work_dttm"));
+                System.out.println("wifi 저장 ");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            DbConnection.closeConnection(connection, preparedStatement, rs);
+        }
+        return wifi;
+    }
 }

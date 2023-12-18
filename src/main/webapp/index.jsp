@@ -2,30 +2,27 @@
 <%@ page import="java.util.List" %>
 <%@ page import="dto.Wifi" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="service.HistoryService" %>
+<%@ page import="dto.History" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="style/style.css">
-    <title>와이파이 정보 구하기</title>
-</head>
+<jsp:include page="header.jsp"/>
 <body>
 <%
     double lat = request.getParameter("lat") == "" || request.getParameter("lat") == null ? 0.0 : Double.parseDouble(request.getParameter("lat"));
     double lnt = request.getParameter("lnt") == "" || request.getParameter("lnt") == null ? 0.0 : Double.parseDouble(request.getParameter("lnt"));
 
     List<Wifi> wifiList = new ArrayList<>();
+    int wifiId;
 
     if (lat > 0 || lnt > 0) {
-        wifiList = WifiService.searchNearWifi(lat, lnt);
+        wifiList = WifiService.searchNearWifi(lat, lnt); // 주변 와이파이 검색
+        HistoryService.insertHistory(new History(lat, lnt)); // 히스토리 저장
     }
 %>
 <h1>와이파이 정보 구하기</h1>
-<nav>
-    <a href="index.jsp">홈</a> |
-    <a href="/css/">위치 히스토리 목록</a> |
-    <a href="getApiInfo.jsp">Open API 와이파이 정보 가져오기</a>
-</nav>
+<jsp:include page="nav.jsp"/>
 <br/>
     <div>
         LAT: <input type="number" id="lat" name="lat" value="<%=lat%>">,
@@ -56,15 +53,16 @@
             <th>작업일자</th>
         </tr>
         <%
-            if (wifiList.size() > 0){
+            if (!wifiList.isEmpty()){
                 for (int i = 0; i < wifiList.size(); i++) {
                     Wifi wifi = wifiList.get(i);
+                    wifiId = wifi.getId();
         %>
         <tr>
             <td><%=wifi.getDistance()%></td>
             <td><%=wifi.getxSwifiMgrNo()%></td>
             <td><%=wifi.getxSwifiWrdofc()%></td>
-            <td><%=wifi.getxSwifiMainNm()%></td>
+            <td><a href="wifiDetail.jsp?wifiId=<%=wifiId%>&distance=<%=wifi.getDistance()%>"><%=wifi.getxSwifiMainNm()%></a></td>
             <td><%=wifi.getxSwifiAdres1()%></td>
             <td><%=wifi.getxSwifiAdres2()%></td>
             <td><%=wifi.getxSwifiInstlFloor()%></td>

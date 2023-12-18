@@ -1,17 +1,13 @@
 package service;
 
 import com.google.gson.*;
-import dto.Wifi;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.List;
+
 
 public class ApiService {
     static String wifiUrl = "http://openapi.seoul.go.kr:8088/414d467047676172363257774c6d6d/json/TbPublicWifiInfo/";

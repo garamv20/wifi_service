@@ -3,6 +3,7 @@ package dto;
 import java.sql.Timestamp;
 
 public class Wifi {
+    private int id;
     private double distance; // 거리
     private String xSwifiMgrNo;  // 관리번호
     private String xSwifiWrdofc; // 자치구
@@ -20,6 +21,14 @@ public class Wifi {
     private double lat; // 위도
     private double lnt; // 경도
     private String workDttm; // 작업일자
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public double getDistance() {
         return distance;
